@@ -25,7 +25,9 @@ io.on('connection', function(socket){
   socket.on('show_red', function(username){
     if(username != "") {
       var s = users[username];
-      s.emit('show_red');
+      if(s) {
+        s.emit('show_red');
+      }
     } else {
       io.emit('show_red');
     }
@@ -34,7 +36,9 @@ io.on('connection', function(socket){
   socket.on('hide_red', function(username){
     if(username != "") {
       var s = users[username];
-      s.emit('hide_red');
+      if(s) {
+        s.emit('hide_red');
+      }
     } else {
       io.emit('hide_red');
     }
@@ -44,7 +48,6 @@ io.on('connection', function(socket){
     socket.username = username;
     users[username] = socket;
     io.emit('new_user', username + ' has entered!');
-    console.log(users);
   });
 });
 

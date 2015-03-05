@@ -52,7 +52,11 @@
       var div = $("#red");
       div.remove();
     });
-    
+
+    socket.on('connect', function() {
+      socket.emit('new_user', prompt("What's your username?"));
+    });
+
   </script>
   </body>
 </html>

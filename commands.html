@@ -5,41 +5,25 @@
   </head>
   <body>
     <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
+
+      <input id="username" autocomplete="off" />
+      <button id="show_red">show_red</button>
+      <button id="hide_red">hide_red</button>
     </form>
   <script src="/socket.io/socket.io.js"></script>
   <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
   <script>
     var socket = io();
 
-    $('form').submit(function(){
-      if($('#m').val() == "show_red") {
-        socket.emit('show_red', 'show_red');
-      }
-
-      if($('#m').val() == "hide_red") {
-        socket.emit('hide_red', 'hide_red');
-      }
-
-      $('#m').val('');
-
-      return false;
+    $("#show_red").click(function(){
+      var username = $('#username').val();
+      socket.emit('show_red', username);
     });
 
-
-    // $('form').submit(function(){
-    //   var m = $('#m').val();
-    //   if(m.val() == "show_red") {
-    //     socket.emit('show_red');
-    //     $('#messages').append($('<li>').text("show_red"));
-    //   }
-    //   if(m.val() == "hide_red") {
-    //     socket.emit('hide_red');
-    //     $('#messages').append($('<li>').text("hide_red"));
-    //   }
-    //   return false;
-    // });
+    $("#hide_red").click(function(){
+      var username = $('#username').val();
+      socket.emit('hide_red', username);
+    });
   </script>
   </body>
 </html>

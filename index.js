@@ -2,6 +2,8 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var users = {};
+
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
@@ -11,7 +13,6 @@ app.get('/commands', function(req, res){
 });
 
 io.on('connection', function(socket){
-  socket.broadcast.emit('new_user', 'a new user has entered!');
 
   socket.on('chat message', function(msg){
     io.emit('chat message', msg);
@@ -21,14 +22,29 @@ io.on('connection', function(socket){
     io.emit('disconnected', "a user has disconnected");
   });
 
-  socket.on('show_red', function(){
-    console.log('show_red');
-    io.emit('show_red');
+  socket.on('show_red', function(username){
+    if(username != "") {
+      var s = users[username];
+      s.emit('show_red');
+    } else {
+      io.emit('show_red');
+    }
   });
 
-  socket.on('hide_red', function(){
-    console.log('hide_red');
-    io.emit('hide_red');
+  socket.on('hide_red', function(username){
+    if(username != "") {
+      var s = users[username];
+      s.emit('hide_red');
+    } else {
+      io.emit('hide_red');
+    }
+  });
+
+  socket.on('new_user', function(username){
+    socket.username = username;
+    users[username] = socket;
+    io.emit('new_user', username + ' has entered!');
+    console.log(users);
   });
 });
 

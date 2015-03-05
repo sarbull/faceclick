@@ -1,0 +1,9 @@
+{
+  "name": "Faceclick",
+  "version": "0.0.1",
+  "description": "Interactive multiplayer game written in nodejs.",
+  "dependencies": {
+    "express": "^4.10.2",
+    "socket.io": "^1.3.5"
+  }
+}

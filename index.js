@@ -22,25 +22,25 @@ io.on('connection', function(socket){
     io.emit('disconnected', "a user has disconnected");
   });
 
-  socket.on('show_red', function(username){
-    if(username != "") {
-      var s = users[username];
+  socket.on('show_color', function(object){
+    if(object.username != "") {
+      var s = users[object.username];
       if(s) {
-        s.emit('show_red');
+        s.emit('show_color', object.color);
       }
     } else {
-      io.emit('show_red');
+      io.emit('show_color', object.color);
     }
   });
 
-  socket.on('hide_red', function(username){
-    if(username != "") {
-      var s = users[username];
+  socket.on('hide_color', function(object){
+    if(object.username != "") {
+      var s = users[object.username];
       if(s) {
-        s.emit('hide_red');
+        s.emit('hide_color', object.color);
       }
     } else {
-      io.emit('hide_red');
+      io.emit('hide_color', object.color);
     }
   });
 

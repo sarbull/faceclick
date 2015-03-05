@@ -37,19 +37,19 @@
       $('#messages').append($('<li>').text(msg));
     });
 
-    socket.on('show_red', function(msg){
+    socket.on('show_color', function(object){
       var div = $("<div> </div>");
       div.css('height', '100%');
       div.css('width', '100%');
       div.css('position', "absolute");
       div.css('z-index', 10);
-      div.css('background-color', "#ff0000");
-      div.attr("id", "red");
+      div.css('background-color', object);
+      div.attr("id", "color");
       $("body").prepend(div);
     });
 
-    socket.on('hide_red', function(msg){
-      var div = $("#red");
+    socket.on('hide_color', function(msg){
+      var div = $("#color");
       div.remove();
     });
 

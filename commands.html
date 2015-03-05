@@ -6,23 +6,43 @@
   <body>
     <ul id="messages"></ul>
 
-      <input id="username" autocomplete="off" />
-      <button id="show_red">show_red</button>
-      <button id="hide_red">hide_red</button>
+      <input id="username" autocomplete="off" placeholder="username"/>
+      <input id="color" autocomplete="off" placeholder="color"/>
+      <button id="show_color">show_color</button>
+      <button id="hide_color">hide_color</button>
     </form>
   <script src="/socket.io/socket.io.js"></script>
   <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
   <script>
     var socket = io();
 
-    $("#show_red").click(function(){
+    var object = {
+      "username": "",
+      "color": "#ff0000"
+    };
+
+    $("#show_color").click(function(){
       var username = $('#username').val();
-      socket.emit('show_red', username);
+      var color = $('#color').val();
+
+      object = {
+        "username": username,
+        "color": color
+      };
+
+      socket.emit('show_color', object);
     });
 
-    $("#hide_red").click(function(){
+    $("#hide_color").click(function(){
       var username = $('#username').val();
-      socket.emit('hide_red', username);
+      var color = $('#color').val();
+
+      object = {
+        "username": username,
+        "color": color
+      };
+
+      socket.emit('hide_color', object);
     });
   </script>
   </body>

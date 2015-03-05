@@ -37,10 +37,10 @@ io.on('connection', function(socket){
     if(object.username != "") {
       var s = users[object.username];
       if(s) {
-        s.emit('hide_color', object.color);
+        s.emit('hide_color');
       }
     } else {
-      io.emit('hide_color', object.color);
+      io.emit('hide_color');
     }
   });
 

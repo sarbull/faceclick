@@ -18,12 +18,16 @@
 
     var object = {
       "username": "",
-      "color": "#ff0000"
+      "color": ""
     };
+
+    var color = "#ff0000";
 
     $("#show_color").click(function(){
       var username = $('#username').val();
-      var color = $('#color').val();
+      if($('#color').val() != "") {
+        color = $('#color').val();
+      }
 
       object = {
         "username": username,
@@ -35,11 +39,9 @@
 
     $("#hide_color").click(function(){
       var username = $('#username').val();
-      var color = $('#color').val();
 
       object = {
-        "username": username,
-        "color": color
+        "username": username
       };
 
       socket.emit('hide_color', object);

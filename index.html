@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>Index</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
@@ -36,6 +36,23 @@
     socket.on('new_user', function(msg){
       $('#messages').append($('<li>').text(msg));
     });
+
+    socket.on('show_red', function(msg){
+      var div = $("<div> </div>");
+      div.css('height', '100%');
+      div.css('width', '100%');
+      div.css('position', "absolute");
+      div.css('z-index', 10);
+      div.css('background-color', "#ff0000");
+      div.attr("id", "red");
+      $("body").prepend(div);
+    });
+
+    socket.on('hide_red', function(msg){
+      var div = $("#red");
+      div.remove();
+    });
+    
   </script>
   </body>
 </html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Commands</title>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script>
+    var socket = io();
+
+    $('form').submit(function(){
+      if($('#m').val() == "show_red") {
+        socket.emit('show_red', 'show_red');
+      }
+
+      if($('#m').val() == "hide_red") {
+        socket.emit('hide_red', 'hide_red');
+      }
+
+      $('#m').val('');
+
+      return false;
+    });
+
+
+    // $('form').submit(function(){
+    //   var m = $('#m').val();
+    //   if(m.val() == "show_red") {
+    //     socket.emit('show_red');
+    //     $('#messages').append($('<li>').text("show_red"));
+    //   }
+    //   if(m.val() == "hide_red") {
+    //     socket.emit('hide_red');
+    //     $('#messages').append($('<li>').text("hide_red"));
+    //   }
+    //   return false;
+    // });
+  </script>
+  </body>
+</html>

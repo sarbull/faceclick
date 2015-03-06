@@ -72,8 +72,26 @@
     }
 
     function connected() {
-      user["username"] = prompt("What's your username?");
+      var username;
+      while(!validateUsername(username)) {
+        username = prompt("What's your username?");
+      }
+      user["username"] = username;
       socket.emit('new_user_connected', user);
+    }
+
+    function validateUsername(username){
+      if(username != null) {
+        var usernameRegex = /^[a-zA-Z0-9]+$/;
+        var validfirstUsername = username.match(usernameRegex);
+        if(validfirstUsername != null) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
     }
   </script>
   </body>

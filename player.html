@@ -2,88 +2,372 @@
 <html>
   <head>
     <title>Faceclick</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+
+      * {
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+      }
+
       body {
         margin:0;
-        font-family: Arial;
-      }
-      .player {
-        padding-top:10px;
-        width:30%;
-        background-color:#eee;
-        text-align: center;
-        border-radius: 5px;
-        border:1px solid #ccc;
-      }
-      .player h1 {
-        margin:0;
-        margin-bottom:10px;
-        font-size:20px;
+        font-family: sans-serif;
+        color:#444;
+        background-color: #efeded;
       }
 
-      .player img {
-        width:90%;
-        border-radius:60px;
-      }
-      
       #players {
-        margin-left:5px;
+        width:100%;
+        margin-bottom: 100px;
       }
 
-      #players > div {
-        float:left;
-        margin:10px 5px 10px 5px;
+      #players > .player {
+        margin-right: -3px;
+        width:33%;
+        padding:5px;
+        display:inline-block;
+        vertical-align: top;
       }
 
-      #header > div {
-        background-color:#ccc;
-        float:left;
+      #players > .player > .content {
+        text-align: center;
+        background-color: #fff;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        -webkit-box-shadow: 1px 1px 3px rgba(0,0,0,.1);
+        box-shadow: 1px 1px 3px rgba(0,0,0,.1);
       }
 
-      #header > div h1 {
+      #players > .player > .content > img {
+        width:100%;
+        border-radius: 3px 3px 0px 0px;
+      }
+
+      #players > .player > .content > h1 {
+        font-size:100%;
+        padding:5px;
         margin:0;
+      }
+
+      #header {
+        background-color:#c0392b;
+        z-index:2;
+      }
+
+      #header > h1 {
+        text-align: center;
+        font-weight:normal;
+        color:#fff;
+        padding:10px 0px 10px 2px;
+        margin:0;
+      }
+
+      #footer {
+        width:100%;
+        position:fixed;
+        background-color: #7f8c8d;
+        bottom:0;
+      }
+
+      #footer > h1 {
+        text-align: center;
+        font-weight:normal;
+        color:#fff;
+        padding:10px 0px 10px 2px;
+        margin:0;
+      }
+
+      #login {
+        width:100%;
+        height:100%;
+        position:fixed;
+        z-index:1;
+        background-color: #fff;
+      }
+
+      #login > .table {
+        display: table;
+        text-align: center;
+        width:100%;
+        height:100%;
+      }
+
+      #login > .table > .table-cell {
+        display: table-cell;
+        vertical-align: middle;
+      }
+
+      #login > .table > .table-cell > input[type="text"] {
+        font-size:25px;
+        text-align:center;
+        width:70%;
         padding:10px;
+        border:2px solid #ccc;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+      }
+
+      #login > .table > .table-cell > button {
+        display:block;
+        margin:0 auto;
+        margin-top:10px;
+        background-color: #27ae60; /* #2ecc71 */
+        width:70%;
+        height:50px;
         font-size: 20px;
+        color: #fff;
+        border:none;
+        cursor: pointer;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        background: #2ecc71; /* Old browsers */
+        background: -moz-linear-gradient(top,  #2ecc71 0%, #27ae60 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2ecc71), color-stop(100%,#27ae60)); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top,  #2ecc71 0%,#27ae60 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top,  #2ecc71 0%,#27ae60 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top,  #2ecc71 0%,#27ae60 100%); /* IE10+ */
+        background: linear-gradient(to bottom,  #2ecc71 0%,#27ae60 100%); /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2ecc71', endColorstr='#27ae60',GradientType=0 ); /* IE6-9 */
       }
 
-      #header > div:nth-of-type(1) {
-        width:80%;
+      #app {
+        display:none;
       }
 
-      #header > div:nth-of-type(2) {
-        background-color:#eee;
-        width:20%;
+      #dashboard {
+        padding-top:5%;
+        display:none;
+        width:100%;
+        height:100%;
+        z-index:1;
+        background-color: #fff;
+        text-align: center;
+      }
+
+      #dashboard > h1, p {
+        margin:0;
+      }
+
+      #dashboard > p > img {
+        -webkit-border-radius: 60px;
+        border-radius: 60px;
+      }
+
+      #dashboard > button {
+        display:block;
+        margin:0 auto;
+        margin-top:10px;
+        background-color: #27ae60; /* #2ecc71 */
+        width:70%;
+        height:50px;
+        font-size: 20px;
+        color: #fff;
+        border:none;
+        cursor: pointer;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        background: #2ecc71; /* Old browsers */
+        background: -moz-linear-gradient(top,  #2ecc71 0%, #27ae60 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2ecc71), color-stop(100%,#27ae60)); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top,  #2ecc71 0%,#27ae60 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top,  #2ecc71 0%,#27ae60 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top,  #2ecc71 0%,#27ae60 100%); /* IE10+ */
+        background: linear-gradient(to bottom,  #2ecc71 0%,#27ae60 100%); /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2ecc71', endColorstr='#27ae60',GradientType=0 ); /* IE6-9 */
+      }
+
+      #dashboard > #user-data {
+        text-align: left;
+        width:70%;
+        margin:25px auto;
+      }
+
+      #dashboard > #user-data > table {
+        width:100%;
       }
     </style>
   </head>
   <body>
-<!--     <div id="login">
-      <input type="text" id="username" placeholder="username">
-      <button id="save">Save</button>
-    </div>
- -->
-
     <div id="header">
-      <div id="title">
-        <h1>Waiting for players...</h1>
-      </div>
-      <div id="score">asdas</div>
-      <br style="clear:both">
+      <h1>Faceclick</h1>
     </div>
-    <div id="players">
-      <div id="player1" class="player">
-        <h1>Player1</h1>
-        <img src="https://www.gravatar.com/avatar/f467b944cb337fd16c7239a9c8befe47?d=monsterid&amp;s=120">
-      </div>
-      <div id="player2" class="player">
-        <h1>Player2</h1>
-        <img src="https://www.gravatar.com/avatar/f467b944cb337fd16c7229a9c8befe47?d=monsterid&amp;s=120">
-      </div>
-      <div id="player3" class="player">
-        <h1>Cristina Eftimie</h1>
-        <img src="https://www.gravatar.com/avatar/f467b944cb337fd16c7229a9c8befe77?d=monsterid&amp;s=120">
+
+    <div id="login">
+      <div class="table">
+        <div class="table-cell">
+          <input type="text" id="username-data" placeholder="username">
+          <button id="save-username">Save</button>
+        </div>
       </div>
     </div>
 
+    <div id="dashboard">
+      <div id="user-data">
+        <table>
+          <tr>
+            <td>Connected players</td>
+            <td style="text-align: right;">8</td>
+          </tr>
+          <tr>
+            <td>Players ready</td>
+            <td style="text-align: right;">2/8</td>
+          </tr>
+          <tr>
+            <td colspan="2">asdasda has connected.</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div id="app">
+      <div id="players">
+        <div id="player1" class="player">
+          <div class="content">
+            <img src="https://www.gravatar.com/avatar/f467b944cb337fd16c7239a9c8befe47?d=monsterid&amp;s=120">
+            <h1>Player 1</h1>
+          </div>
+        </div>
+
+        <div id="player2" class="player">
+          <div class="content">
+            <img src="https://www.gravatar.com/avatar/f467b924cb337fd16c7229a9c8befe77?d=monsterid&amp;s=120">
+            <h1>Mihaita</h1>
+          </div>
+        </div>
+
+        <div id="player3" class="player">
+          <div class="content">
+            <img src="https://www.gravatar.com/avatar/f427b844cb337fd16c7239a9c8befe47?d=monsterid&amp;s=120">
+            <h1>Player 3</h1>
+          </div>
+        </div>
+
+        <div id="player2" class="player">
+          <div class="content">
+            <img src="https://www.gravatar.com/avatar/f467b944cb337fd16c7229a9c8befe77?d=monsterid&amp;s=120">
+            <h1>Mihaita</h1>
+          </div>
+        </div>
+
+        <div id="player1" class="player">
+          <div class="content">
+            <img src="https://www.gravatar.com/avatar/f467b944cb437fd16c7239a9c8befe47?d=monsterid&amp;s=120">
+            <h1>Player 1</h1>
+          </div>
+        </div>
+
+        <div id="player3" class="player">
+          <div class="content">
+            <img src="https://www.gravatar.com/avatar/f467b944cb332fd16c7239a9c8befe47?d=monsterid&amp;s=120">
+            <h1>Player 3</h1>
+          </div>
+        </div>
+
+        <div id="player1" class="player">
+          <div class="content">
+            <img src="https://www.gravatar.com/avatar/f467b944cb337fd16c7239a9c8befe47?d=monsterid&amp;s=120">
+            <h1>Player 1</h1>
+          </div>
+        </div>
+
+        <div id="player2" class="player">
+          <div class="content">
+            <img src="https://www.gravatar.com/avatar/f467b924cb337fd16c7229a9c8befe77?d=monsterid&amp;s=120">
+            <h1>Mihaita</h1>
+          </div>
+        </div>
+
+        <div id="player3" class="player">
+          <div class="content">
+            <img src="https://www.gravatar.com/avatar/f427b844cb337fd16c7239a9c8befe47?d=monsterid&amp;s=120">
+            <h1>Player 3</h1>
+          </div>
+        </div>
+
+        <div id="player1" class="player">
+          <div class="content">
+            <img src="https://www.gravatar.com/avatar/f467b944cb437fd16c7239a9c8befe47?d=monsterid&amp;s=120">
+            <h1>Player 1</h1>
+          </div>
+        </div>
+
+        <div id="player3" class="player">
+          <div class="content">
+            <img src="https://www.gravatar.com/avatar/f467b944cb332fd16c7239a9c8befe47?d=monsterid&amp;s=120">
+            <h1>Player 3</h1>
+          </div>
+        </div>
+
+        <div id="player1" class="player">
+          <div class="content">
+            <img src="https://www.gravatar.com/avatar/f467b944cb337fd16c7239a9c8befe47?d=monsterid&amp;s=120">
+            <h1>Player 1</h1>
+          </div>
+        </div>
+      </div>
+      <div id="footer">
+        <h1>Waiting for other players......</h1>
+      </div>
+    </div>
+
+
+
+
+
+    <script src="md5.js"></script>
+    <script src="jquery-1.11.1.js"></script>
+    <script>
+      var user = {
+        "username": "",
+        "game_ready": false,
+        "in_game": false,
+        "profile_picture": "",
+        "message": ""
+      };
+      var save_username = $("#save-username");
+      var username_data = $("#username-data");
+      var login_page    = $("#login");
+      var dashboard     = $("#dashboard");
+      var body          = $("body");
+
+      save_username.click(function() {
+        var username = username_data.val();
+        if(validateUsername(username)) {
+          user.username = username;
+          var usernameHash     = CryptoJS.MD5(user.username);
+          var profile_picture  = "https://www.gravatar.com/avatar/" + usernameHash + "?d=monsterid&amp;s=120";
+          user.profile_picture = profile_picture;
+          dashboard.prepend('<button id="ready">Ready</button>');
+          dashboard.prepend('<p><img src="' + user.profile_picture + '"></p>');
+          dashboard.prepend("<h1>" + user.username + "</h1>");
+          login_page.hide();
+          dashboard.show();
+          // send socket
+        } else {
+          alert("Invalid username");
+        }
+      });
+
+      body.delegate('#ready', 'click', function() {
+        user.game_ready = true;
+        // send socket
+      });
+
+    function validateUsername(username){
+      if(username != null) {
+        var usernameRegex = /^[a-zA-Z0-9]+$/;
+        var validfirstUsername = username.match(usernameRegex);
+        if(validfirstUsername != null) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+    </script>
   </body>
 </html>

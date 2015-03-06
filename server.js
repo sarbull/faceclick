@@ -71,6 +71,6 @@ function disconnected(username) {
   sendMessageToAll(username + " has disconnected.", username);
 }
 
-http.listen(80, function(){
-  console.log('listening on http://localhost:80');
+http.listen(8000, function(){
+  console.log('listening on http://localhost:8000');
 });

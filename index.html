@@ -16,47 +16,65 @@
   <body>
     <ul id="messages"></ul>
     <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
+      <input id="message" autocomplete="off" /><button>Send</button>
     </form>
   <script src="/socket.io/socket.io.js"></script>
   <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
   <script>
-    var socket = io();
+    var socket   = io();
+    var user     = {};
 
-    $('form').submit(function(){
-      socket.emit('chat message', $('#m').val());
-      $('#m').val('');
+    var messages = $("#messages");
+    var body     = $("body");
+    var message  = $("#message");
+
+    var div      = $("<div> </div>").attr("id", "color").css({
+      "display":   "none",
+      "height":    "100%",
+      "width":     "100%",
+      "position":   "absolute",
+      "z-index":    10
+    });
+    body.prepend(div);
+
+    $("form").submit(function() {
+      var input = {
+        "message": message.val(),
+        "username": user.username
+      };
+      message_all(input);
       return false;
     });
 
-    socket.on('chat message', function(msg){
-      $('#messages').append($('<li>').text(msg));
+    socket.on('show_color', function(input){
+      console.log(input);
+      div.css("background-color", input.color);
+      div.show();
     });
 
-    socket.on('new_user', function(msg){
-      $('#messages').append($('<li>').text(msg));
+    socket.on('hide_color', function(){
+      div.hide();
     });
 
-    socket.on('show_color', function(object){
-      var div = $("<div> </div>");
-      div.css('height', '100%');
-      div.css('width', '100%');
-      div.css('position', "absolute");
-      div.css('z-index', 10);
-      div.css('background-color', object);
-      div.attr("id", "color");
-      $("body").prepend(div);
-    });
-
-    socket.on('hide_color', function(msg){
-      var div = $("#color");
-      div.remove();
+    socket.on('message_all', function(input){
+      console.log(input);
+      messages.append($("<li>").text(input.message));
     });
 
     socket.on('connect', function() {
-      socket.emit('new_user', prompt("What's your username?"));
+      connected();
     });
 
+    function message_all(input) {
+      socket.emit('message_all', input);
+      message.val("");
+      input.message = "";
+    }
+
+    function connected() {
+      user["username"] = prompt("What's your username?");
+      socket.emit('new_user_connected', user);
+    }
   </script>
   </body>
 </html>

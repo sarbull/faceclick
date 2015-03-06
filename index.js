@@ -13,45 +13,64 @@ app.get('/commands', function(req, res){
 });
 
 io.on('connection', function(socket){
-
-  socket.on('chat message', function(msg){
-    io.emit('chat message', msg);
+  socket.on('message_all', function(input) {
+    sendMessageToAll(input.message);
   });
 
-  socket.on('disconnect', function(){
-    io.emit('disconnected', "a user has disconnected");
+  socket.on('new_user_connected', function(input) {
+    addUser(input.username, socket);
   });
 
-  socket.on('show_color', function(object){
-    if(object.username != "") {
-      var s = users[object.username];
-      if(s) {
-        s.emit('show_color', object.color);
-      }
-    } else {
-      io.emit('show_color', object.color);
-    }
+  socket.on('disconnect', function() {
+    disconnected(socket.username);
   });
 
-  socket.on('hide_color', function(object){
-    if(object.username != "") {
-      var s = users[object.username];
-      if(s) {
-        s.emit('hide_color');
-      }
-    } else {
-      io.emit('hide_color');
-    }
+  socket.on('show_color', function(input) {
+    show_color(input);
   });
 
-  socket.on('new_user', function(username){
-    socket.username = username;
-    users[username] = socket;
-    io.emit('new_user', username + ' has entered!');
+  socket.on('hide_color', function(input) {
+    hide_color(input.username);
   });
 });
 
+function sendMessageToAll(message, sender) {
+  var input = {
+    "message": message,
+    "sender": sender
+  };
+  io.emit('message_all', input);
+}
+
+function addUser(username, socket) {
+  socket.username = username;
+  users[username] = socket;
+  sendMessageToAll(username + " has connected.", username);
+}
+
+function returnUser(username) {
+  return users[username];
+}
+
+function removeUser(username) {
+  delete users[username];
+}
+
+function show_color(input) {
+  var user = returnUser(input.username);
+  user.emit('show_color', input);
+}
+
+function hide_color(username) {
+  var user = returnUser(username);
+  user.emit('hide_color');
+}
+
+function disconnected(username) {
+  removeUser(username);
+  sendMessageToAll(username + " has disconnected.", username);
+}
 
 http.listen(3000, function(){
-  console.log('listening on *:3000');
+  console.log('listening on http://localhost:3000');
 });

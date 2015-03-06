@@ -288,6 +288,8 @@
         "profile_picture": "",
         "message": ""
       };
+      var scores = [];
+      var total_players = 0;
       var launchGameInterval;
       var wait_dots;
       var save_username     = $("#save-username");
@@ -324,6 +326,7 @@
       body.delegate('#ready', 'click', function() {
         user.game_ready = true;
         dashboard.hide();
+        announcer.hide();
         players.show();
         footer.show();
         waitingDots();
@@ -333,6 +336,27 @@
       body.delegate('#go-to-dashboard', 'click', function() {
         announcer.hide();
         dashboard.show();
+      });
+
+      body.delegate('#go-to-table-scores', 'click', function() {
+        var i = 0;
+        var html_table_score = "<h1>Table scores</h1>";
+        html_table_score += "<table>";
+        var table_score_interval = window.setInterval(function() {
+          scores.forEach(function(score) {
+            html_table_score += "<tr>";
+            html_table_score += "<td>" + score.username + "</td>";
+            html_table_score += "<td>" + score.score + "</td>";
+            html_table_score += "</tr>";
+            i++;
+          });
+          html_table_score += "</table>";
+          html_table_score += '<button id="go-to-dashboard">Dashboard</button>';
+          announcer.html(html_table_score);
+          if(i == total_players) {
+            window.clearInterval(table_score_interval);
+          }
+        }, 200);
       });
 
 
@@ -357,6 +381,7 @@
       }
 
       function startGame() {
+        announcer.html("");
         announcer.show();
         updateScore();
         var i = 4;
@@ -442,6 +467,7 @@
         var html = '\
           <h1>Your score ' + user.username + ': ' + user.score + '</h1> \
           <button id="go-to-dashboard">Dashboard</button> \
+          <button id="go-to-table-scores">Table scores</button> \
         ';
         announcer.html(html);
       }

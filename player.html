@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Faceclick</title>
+    <style>
+      body {
+        margin:0;
+        font-family: Arial;
+      }
+      .player {
+        padding-top:10px;
+        width:30%;
+        background-color:#eee;
+        text-align: center;
+        border-radius: 5px;
+        border:1px solid #ccc;
+      }
+      .player h1 {
+        margin:0;
+        margin-bottom:10px;
+        font-size:20px;
+      }
+
+      .player img {
+        width:90%;
+        border-radius:60px;
+      }
+      
+      #players {
+        margin-left:5px;
+      }
+
+      #players > div {
+        float:left;
+        margin:10px 5px 10px 5px;
+      }
+
+      #header > div {
+        background-color:#ccc;
+        float:left;
+      }
+
+      #header > div h1 {
+        margin:0;
+        padding:10px;
+        font-size: 20px;
+      }
+
+      #header > div:nth-of-type(1) {
+        width:80%;
+      }
+
+      #header > div:nth-of-type(2) {
+        background-color:#eee;
+        width:20%;
+      }
+    </style>
+  </head>
+  <body>
+<!--     <div id="login">
+      <input type="text" id="username" placeholder="username">
+      <button id="save">Save</button>
+    </div>
+ -->
+
+    <div id="header">
+      <div id="title">
+        <h1>Waiting for players...</h1>
+      </div>
+      <div id="score">asdas</div>
+      <br style="clear:both">
+    </div>
+    <div id="players">
+      <div id="player1" class="player">
+        <h1>Player1</h1>
+        <img src="https://www.gravatar.com/avatar/f467b944cb337fd16c7239a9c8befe47?d=monsterid&amp;s=120">
+      </div>
+      <div id="player2" class="player">
+        <h1>Player2</h1>
+        <img src="https://www.gravatar.com/avatar/f467b944cb337fd16c7229a9c8befe47?d=monsterid&amp;s=120">
+      </div>
+      <div id="player3" class="player">
+        <h1>Cristina Eftimie</h1>
+        <img src="https://www.gravatar.com/avatar/f467b944cb337fd16c7229a9c8befe77?d=monsterid&amp;s=120">
+      </div>
+    </div>
+
+  </body>
+</html>

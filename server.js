@@ -14,11 +14,22 @@ app.get('/jquery-1.11.1.js', function(req, res){
   res.sendFile(__dirname + '/jquery-1.11.1.js');
 });
 
+app.get('/md5.js', function(req, res){
+  res.sendFile(__dirname + '/md5.js');
+});
+
 app.get('/commands', function(req, res){
   res.sendFile(__dirname + '/commands.html');
 });
 
 io.on('connection', function(socket){
+
+  socket.on('set username and profile picture', function (input) {
+    socket.username        = input.username;
+    socket.profile_picture = input.profile_picture;
+  });
+
+
   socket.on('message_all', function(input) {
     sendMessageToAll(input.message);
   });

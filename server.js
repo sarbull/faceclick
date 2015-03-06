@@ -10,6 +10,10 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/jquery-1.11.1.js', function(req, res){
+  res.sendFile(__dirname + '/jquery-1.11.1.js');
+});
+
 app.get('/commands', function(req, res){
   res.sendFile(__dirname + '/commands.html');
 });

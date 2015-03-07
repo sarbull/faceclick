@@ -39,34 +39,36 @@ io.on('connection', function(socket){
   });
 
   socket.on('update_player', function(input) {
-    if(players[input.username] == undefined) {
-      io.emit('new_player_entered', input);
-    }
+    if(validateUsername(input.username)) {
+      if(players[input.username] == undefined) {
+        io.emit('new_player_entered', input);
+      }
 
-    players[input.username] = {
-      "socket_id": input.socket_id,
-      "username": input.username,
-      "score": input.score,
-      "game_ready": input.game_ready,
-      "in_game": input.in_game,
-      "game_is_on": input.game_is_on,
-      "profile_picture": input.profile_picture
-    };
+      players[input.username] = {
+        "socket_id": input.socket_id,
+        "username": input.username,
+        "score": input.score,
+        "game_ready": input.game_ready,
+        "in_game": input.in_game,
+        "game_is_on": input.game_is_on,
+        "profile_picture": input.profile_picture
+      };
 
-    if(input.game_is_off) {
-      io.emit('show_scores', players);
-    }
+      if(input.game_is_off) {
+        io.emit('show_scores', players);
+      }
 
-    if(input.game_ready) {
-      newPlayerIsReady(input);
-    }
+      if(input.game_ready) {
+        newPlayerIsReady(input);
+      }
 
-    if(gameReadyCount() == 3) {
-      var only_ready_players = onlyReadyPlayers();
-      for (var username in only_ready_players) {
-        var player = players[username];
-        if(player.game_ready) {
-          io.sockets.connected[player.socket_id].emit('start_game');
+      if(gameReadyCount() == 3) {
+        var only_ready_players = onlyReadyPlayers();
+        for (var username in only_ready_players) {
+          var player = players[username];
+          if(player.game_ready) {
+            io.sockets.connected[player.socket_id].emit('start_game');
+          }
         }
       }
     }
@@ -113,6 +115,20 @@ function gameReadyCount() {
      }
   }
   return game_ready;
+}
+
+function validateUsername(username){
+  if(username != null) {
+    var usernameRegex = /^[a-zA-Z0-9]+$/;
+    var validfirstUsername = username.match(usernameRegex);
+    if(validfirstUsername != null) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
 }
 
 // function playersSize() {

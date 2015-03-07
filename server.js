@@ -7,12 +7,8 @@ var port = process.env.PORT || 3000;
 var players = {};
 
 
-app.get('/game', function(req, res){
-  res.sendFile(__dirname + '/player.html');
-});
-
 app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/player.html');
 });
 
 app.get('/jquery-1.11.1.js', function(req, res){
@@ -101,8 +97,6 @@ function onlyReadyPlayers() {
   return tmp_players;
 }
 
-
-
 function gameReadyCount() {
   var game_ready = 0;
   for (var username in players) {
@@ -114,84 +108,8 @@ function gameReadyCount() {
   return game_ready;
 }
 
-
-
-
-
-
-
-
-
-
 // function playersSize() {
 //   return Object.keys(players).length;
-// }
-
-// function inGame() {
-//   var in_game = 0;
-//   for (var username in players) {
-//      var player = players[username];
-//      if(player.in_game) {
-//       in_game++;
-//      }
-//   }
-//   return in_game;
-// }
-
-
-// function sendNonGameReadyGameUsers() {
-//   for (var username in players) {
-//     var player = players[username];
-//     if(!player.game_ready) {
-//       io.sockets.connected[player.socket_id].emit('load_players', players);
-//     }
-//   }
-// }
-
-// function sendInGameUsers() {
-//   for (var username in players) {
-//     var player = players[username];
-//     if(!player.in_game) {
-//       io.sockets.connected[player.socket_id].emit('load_in_game_players', players);
-//     }
-//   }
-// }
-
-// function sendMessageToAll(message, sender) {
-//   var input = {
-//     "message": message,
-//     "sender": sender
-//   };
-//   io.emit('message_all', input);
-// }
-
-// function addUser(username, socket) {
-//   socket.username = username;
-//   users[username] = socket;
-//   sendMessageToAll(username + " has connected.", username);
-// }
-
-// function returnUser(username) {
-//   return users[username];
-// }
-
-// function removeUser(username) {
-//   delete users[username];
-// }
-
-// function show_color(input) {
-//   var user = returnUser(input.username);
-//   user.emit('show_color', input);
-// }
-
-// function hide_color(username) {
-//   var user = returnUser(username);
-//   user.emit('hide_color');
-// }
-
-// function disconnected(username) {
-//   removeUser(username);
-//   sendMessageToAll(username + " has disconnected.", username);
 // }
 
 http.listen(port, function(){

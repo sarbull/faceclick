@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Faceclick</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
 
       * {
@@ -23,6 +23,10 @@
         margin-bottom: 100px;
         z-index:1;
         display:none;
+      }
+
+      #players * {
+        -webkit-user-select: none;
       }
 
       #players > .player {
@@ -240,33 +244,6 @@
 
 
     <div id="players">
-      <div id="player1" class="player">
-        <div class="content">
-          <img src="https://www.gravatar.com/avatar/f467b944cb337fd16c7239a9c8befe47?d=monsterid&amp;s=120">
-          <h1>Cezar</h1>
-        </div>
-      </div>
-
-      <div id="player2" class="player">
-        <div class="content">
-          <img src="https://www.gravatar.com/avatar/f467b924cb337fd16c7229a9c8befe77?d=monsterid&amp;s=120">
-          <h1>Mihai</h1>
-        </div>
-      </div>
-
-      <div id="player3" class="player">
-        <div class="content">
-          <img src="https://www.gravatar.com/avatar/f427b844cb337fd16c7239a9c8befe47?d=monsterid&amp;s=120">
-          <h1>Delia</h1>
-        </div>
-      </div>
-
-      <div id="player4" class="player">
-        <div class="content">
-          <img src="https://www.gravatar.com/avatar/f467b964cb337fd16c7229a9c8befe77?d=monsterid&amp;s=120">
-          <h1>Marina</h1>
-        </div>
-      </div>
     </div>
 
     <div id="footer">
@@ -275,11 +252,13 @@
 
     <div id="announcer"></div>
 
-
-    <script src="md5.js"></script>
-    <script src="jquery-1.11.1.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/jquery-1.11.1.js"></script>
+    <script src="/md5.js"></script>
     <script>
+      var socket   = io();
       var user = {
+        "socket_id": "",
         "username": "",
         "score": 0,
         "game_ready": false,
@@ -289,6 +268,7 @@
         "message": ""
       };
       var scores = [];
+      var players_array;
       var total_players = 0;
       var launchGameInterval;
       var wait_dots;
@@ -317,7 +297,10 @@
           dashboard.prepend("<h1>" + user.username + "</h1>");
           login_page.hide();
           dashboard.show();
+
           // send socket
+          user.socket_id = socket.id;
+          socket.emit('update_player', user);
         } else {
           alert("Invalid username");
         }
@@ -330,10 +313,18 @@
         players.show();
         footer.show();
         waitingDots();
+
         // send socket
+        socket.emit('update_player', user);
       });
 
       body.delegate('#go-to-dashboard', 'click', function() {
+        user.game_is_on = false;
+        user.in_game    = false;
+        user.game_ready = false;
+        user.score      = 0;
+        total_players   = 0;
+        scores          = [];
         announcer.hide();
         dashboard.show();
       });
@@ -398,30 +389,6 @@
         }, 1000);
       }
 
-      function waitingDots() {
-        wait_dots = window.setInterval( function() {
-          if ($("#dots").css('color') == 'rgb(255, 255, 255)') {
-              $("#dots").css('color', 'rgb(127, 140, 141)');
-          } else { 
-            $("#dots").css('color', 'rgb(255, 255, 255)');
-          }
-        }, 500);
-      }
-
-      function validateUsername(username){
-        if(username != null) {
-          var usernameRegex = /^[a-zA-Z0-9]+$/;
-          var validfirstUsername = username.match(usernameRegex);
-          if(validfirstUsername != null) {
-            return true;
-          } else {
-            return false;
-          }
-        } else {
-          return false;
-        }
-      }
-
       function launchGame() {
         user.game_is_on = true;
         user.in_game    = true;
@@ -446,6 +413,30 @@
         }, 1000);
       }
 
+      function waitingDots() {
+        wait_dots = window.setInterval( function() {
+          if ($("#dots").css('color') == 'rgb(255, 255, 255)') {
+              $("#dots").css('color', 'rgb(127, 140, 141)');
+          } else { 
+            $("#dots").css('color', 'rgb(255, 255, 255)');
+          }
+        }, 500);
+      }
+
+      function validateUsername(username){
+        if(username != null) {
+          var usernameRegex = /^[a-zA-Z0-9]+$/;
+          var validfirstUsername = username.match(usernameRegex);
+          if(validfirstUsername != null) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      }
+
       function stopGame() {
         user.game_is_on = false;
         user.game_ready = false;
@@ -454,7 +445,6 @@
         window.clearInterval(wait_dots);
         header.css('background-color', '#c0392b');
         players.hide();
-        // dashboard.show();
         updateHighScores();
         announcer.show();
         $("#players > .player").each(function() {
@@ -471,6 +461,42 @@
         ';
         announcer.html(html);
       }
+
+      function stopGameAfterTime() {
+
+      }
+
+      socket.on('start_game', function(){
+        startGame();
+        var started = false;
+        var play = window.setInterval(function() {
+          if(started) {
+            socket.emit('exit_all');
+            stopGame();
+            window.clearInterval(play);
+          }
+          started = true;
+        }, 20000);
+      });
+
+      socket.on('player_is_ready', function(readyPlayers){
+        players.html("");
+        for (var username in readyPlayers) {
+          var player = readyPlayers[username];
+          players.append(' \
+            <div id="'+ player.username +'" class="player"> \
+              <div class="content"> \
+                <img src="'+ player.profile_picture + '"> \
+                <h1>'+ player.username +'</h1> \
+              </div> \
+            </div> \
+          ');
+        }
+      });
+
+      $(document).ready(function(){
+        $('*').disableSelection();
+      });
     </script>
   </body>
 </html>

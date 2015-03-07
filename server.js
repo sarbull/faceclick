@@ -11,12 +11,12 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/player.html');
 });
 
-app.get('/jquery-1.11.1.js', function(req, res){
-  res.sendFile(__dirname + '/jquery-1.11.1.js');
+app.get('/js/jquery-1.11.1.js', function(req, res){
+  res.sendFile(__dirname + '/js/jquery-1.11.1.js');
 });
 
-app.get('/md5.js', function(req, res){
-  res.sendFile(__dirname + '/md5.js');
+app.get('/js/md5.js', function(req, res){
+  res.sendFile(__dirname + '/js/md5.js');
 });
 
 app.get('/commands', function(req, res){

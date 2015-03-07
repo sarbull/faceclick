@@ -36,6 +36,10 @@ io.on('connection', function(socket){
   });
 
   socket.on('update_player', function(input) {
+    if(players[input.username] == undefined) {
+      io.emit('new_player_entered', input);
+    }
+
     players[input.username] = {
       "socket_id": input.socket_id,
       "username": input.username,
@@ -45,10 +49,15 @@ io.on('connection', function(socket){
       "game_is_on": input.game_is_on,
       "profile_picture": input.profile_picture
     };
-    io.emit('new_player_entered', input);
+
+    if(input.game_is_off) {
+      io.emit('show_scores', players);
+    }
+
     if(input.game_ready) {
       newPlayerIsReady(input);
     }
+
     if(gameReadyCount() == 3) {
       var only_ready_players = onlyReadyPlayers();
       for (var username in only_ready_players) {

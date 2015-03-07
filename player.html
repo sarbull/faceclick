@@ -264,10 +264,11 @@
         "game_ready": false,
         "in_game": false,
         "game_is_on": false,
+        "game_is_off": true,
         "profile_picture": "",
         "message": ""
       };
-      var scores = [];
+      var scores;
       var players_array;
       var total_players = 0;
       var launchGameInterval;
@@ -319,30 +320,34 @@
       });
 
       body.delegate('#go-to-dashboard', 'click', function() {
-        user.game_is_on = false;
-        user.in_game    = false;
-        user.game_ready = false;
-        user.score      = 0;
-        total_players   = 0;
-        scores          = [];
+        user.game_is_on  = false;
+        user.game_is_off = true;
+        user.in_game     = false;
+        user.game_ready  = false;
+        user.score       = 0;
+        total_players    = 0;
+        scores           = [];
         announcer.hide();
         dashboard.show();
       });
 
       body.delegate('#go-to-table-scores', 'click', function() {
         var i = 0;
-        var html_table_score = "<h1>Table scores</h1>";
+        var html_table_score = "";
+        html_table_score += "<h1>Table scores</h1>";
         html_table_score += "<table>";
         var table_score_interval = window.setInterval(function() {
-          scores.forEach(function(score) {
+          for (var tmp_p in scores) {
+            var p = scores[tmp_p];
             html_table_score += "<tr>";
-            html_table_score += "<td>" + score.username + "</td>";
-            html_table_score += "<td>" + score.score + "</td>";
+            html_table_score += "<td>" + p.username + "</td>";
+            html_table_score += "<td>" + p.score + "</td>";
             html_table_score += "</tr>";
             i++;
-          });
+          }
           html_table_score += "</table>";
           html_table_score += '<button id="go-to-dashboard">Dashboard</button>';
+          html_table_score += '<button id="go-to-table-scores">Table scores</button>';
           announcer.html(html_table_score);
           if(i == total_players) {
             window.clearInterval(table_score_interval);
@@ -390,8 +395,9 @@
       }
 
       function launchGame() {
-        user.game_is_on = true;
-        user.in_game    = true;
+        user.game_is_on  = true;
+        user.game_is_off = false;
+        user.in_game     = true;
         var colors = {
           0:'#ff0000',
           1:'#00ff00',
@@ -438,9 +444,10 @@
       }
 
       function stopGame() {
-        user.game_is_on = false;
-        user.game_ready = false;
-        user.in_game    = false;
+        user.game_is_on  = false;
+        user.game_is_off = true;
+        user.game_ready  = false;
+        user.in_game     = false;
         window.clearInterval(launchGameInterval);
         window.clearInterval(wait_dots);
         header.css('background-color', '#c0392b');
@@ -451,6 +458,7 @@
           $(this).css("background-color", "");
         });
         footer.html('<h1>Waiting for other players<span id="dots">...</span></h1>');
+        socket.emit('update_player', user);
       }
 
       function updateHighScores() {
@@ -501,6 +509,12 @@
             $(user_div).remove();
           }
         }
+      });
+
+      socket.on('show_scores', function(players){
+        // $('#go-to-table-scores:visible').click();
+        scores = players;
+        total_players = Object.keys(players).length;
       });
     </script>
   </body>

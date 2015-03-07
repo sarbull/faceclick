@@ -6,9 +6,16 @@ var port = process.env.PORT || 3000;
 
 var players = {};
 
-
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/player.html');
+});
+
+app.get('/css/stylesheet.css', function(req, res){
+  res.sendFile(__dirname + '/css/stylesheet.css');
+});
+
+app.get('/js/app.js', function(req, res){
+  res.sendFile(__dirname + '/js/app.js');
 });
 
 app.get('/js/jquery-1.11.1.js', function(req, res){
@@ -19,7 +26,7 @@ app.get('/js/md5.js', function(req, res){
   res.sendFile(__dirname + '/js/md5.js');
 });
 
-app.get('/commands', function(req, res){
+app.get('/commands.html', function(req, res){
   res.sendFile(__dirname + '/commands.html');
 });
 

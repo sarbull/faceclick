@@ -28,14 +28,6 @@ app.get('/commands', function(req, res){
 });
 
 io.on('connection', function(socket){
-
-
-
-  // socket.on('disconnect', function () {
-  //   delete clients[socket.id]; // remove the client from the array
-  //   delete users[hs.session.username]; // remove connected user & socket.id
-  // });
-
   socket.on('exit_all', function() {
     for (var username in players) {
       var player = players[username];
@@ -64,6 +56,16 @@ io.on('connection', function(socket){
         if(player.game_ready) {
           io.sockets.connected[player.socket_id].emit('start_game');
         }
+      }
+    }
+  });
+
+  socket.on('disconnect', function() {
+    for (var username in players) {
+      var player = players[username];
+      if(player.socket_id == socket.conn.id) {
+        io.emit('player_has_leaved', player);
+        delete players[username];
       }
     }
   });

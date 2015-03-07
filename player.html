@@ -484,7 +484,7 @@
         for (var username in readyPlayers) {
           var player = readyPlayers[username];
           players.append(' \
-            <div id="'+ player.username +'" class="player"> \
+            <div id="'+ player.username.toLowerCase() +'" class="player"> \
               <div class="content"> \
                 <img src="'+ player.profile_picture + '"> \
                 <h1>'+ player.username +'</h1> \
@@ -494,8 +494,13 @@
         }
       });
 
-      $(document).ready(function(){
-        $('*').disableSelection();
+      socket.on('player_has_leaved', function(player) {
+        if(player.username != undefined) {
+          var user_div = "#" + player.username.toLowerCase();
+          if($(user_div)) {
+            $(user_div).remove();
+          }
+        }
       });
     </script>
   </body>
